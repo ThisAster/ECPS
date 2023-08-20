@@ -1,6 +1,6 @@
 #include "hal.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
+
 
 int i = 0;
 int j = 0;
@@ -52,7 +52,6 @@ int umain()
     WRITE_REG(TIM7_ARR, 500);
     WRITE_REG(TIM7_DIER, TIM_DIER_UIE);
     WRITE_REG(TIM7_PSC, 0);
-
     WRITE_REG(TIM7_CR1, 1);
 
     while(true) {
@@ -61,7 +60,8 @@ int umain()
         sw_nums[2] = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_10) == GPIO_PIN_RESET ? '0': '1';
         sw_nums[3] = HAL_GPIO_ReadPin(GPIOE, GPIO_PIN_12) == GPIO_PIN_RESET ? '0': '1';
     
-        delay = 500 + 200 * strtol(sw_nums, NULL, 2);
+        /* формула; задержка, которая зависит от включенных переключателей */
+        delay = 500 + 200 * strtol(sw_nums, NULL, 2); 
 
         if (delay != prev_delay) {
             WRITE_REG(TIM7_CR1, 0);
@@ -78,3 +78,8 @@ int umain()
 
     return 0;
 }
+
+/* пока у TIMx_CNT не будет такого же значения как у регистра TIMx_ARR, прерывания не будет, а когда эти регистры будут равны, 
+то сначала высчитается новая задержка, выключится таймер, запретятся прерывания, регистр TIMx_ARR запишется новое значение задержки,
+после этого разрешатся прерывания и таймер начнет заново отчет, т.е. при каждом прерывании обновляется кадр и вместе с этим перестановка светодиодов */
+
