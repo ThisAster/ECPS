@@ -22,16 +22,6 @@ typedef enum {
 	HAL_OK
 } HAL_StatusTypeDef;
 
-typedef struct {
-	__IO uint32_t CRL;
-	__IO uint32_t CRH;
-    __IO uint32_t IDR;
-    __IO uint32_t ODR;
-    __IO uint32_t BSRR;
-    __IO uint32_t BRR;
-    __IO uint32_t LCKR;
-} GPIO_TypeDef;
-
 /* !< AHB1 peripherals > */
 #define GPIOA (AHB1PERIPH_BASE + 0x0000UL)
 #define GPIOB (AHB1PERIPH_BASE + 0x0400UL)
@@ -77,10 +67,8 @@ typedef struct {
 void HAL_GPIO_TogglePin(unsigned int gpio_port, unsigned int pin);
 
 GPIO_PinState HAL_GPIO_ReadPin(unsigned int gpio_port, unsigned int pin);
-GPIO_PinState HAL_GPIO_ReadPin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
 
 void HAL_GPIO_WritePin(unsigned int gpio_port, unsigned int pin, GPIO_PinState pin_state);
-void HAL_GPIO_WritePin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin, GPIO_PinState PinState);
 
 void HAL_Delay(unsigned int delay_ms);
 
@@ -104,8 +92,5 @@ void registerTIM7_IRQHandler(void(*irqHandler)());
 /* ф-ии разрешения и запрещения прерывания*/
 void __enable_irq();
 void __disable_irq();
-
-HAL_StatusTypeDef HAL_GPIO_LockPin(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin);
-
 
 #endif
